@@ -1,0 +1,28 @@
+1) Apple Certificate Generate Using Package in (App IDs) option
+	- in this Select PushNotification 
+
+2) Create "Client SSL Certificate"  
+	- in Development SSL Certificate
+
+3) Create Certificate Signing Request (CSR) Certificate
+	- in "Keychain Access" Keychain Access > Certificate Assistant > Request a Certificate From a Certificate Authority…
+	- enter email and select save to disk 
+
+4) Upload CSR File
+	- IN Add ios Certificate(Apple Site)  Press  continue and then choose File
+	- then after Download That Certificate
+
+5) In "Keychain Access" see that certificate now Export it.
+	- save (.p12) certificate
+
+6) Configure FireBase
+	- Login in Google Firebase console then
+	- Create New project then
+	- Download GoogleService-info.plist then Continue
+	- goto Project Setting - > Cloud Messaging
+	- Upload (.p12) File (in Upload Certificate)
+
+7) Now Create Project in set up firebase pod
+	- In target project (Schema) on Push notification
+
+8) Drag and Drop GoogleService-info.plist File inside project
