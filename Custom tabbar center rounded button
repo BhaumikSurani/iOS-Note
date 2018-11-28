@@ -1,0 +1,141 @@
+File :- MBCenteredButtonViewController.h
+
+@interface MBCenteredButtonViewController : UITabBarController <UITabBarDelegate, UITabBarControllerDelegate>
+
+@property(nonatomic, weak) IBOutlet MTCompoundButton *centerButton;
+@property(nonatomic, assign) BOOL tabBarHidden;
+
+-(void)addCenterButtonWithTarget:(id)target action:(SEL)action;
+
+@end
+
+
+
+MBCenteredButtonViewController.m
+
+#import "MBCenteredButtonViewController.h"
+#import "MTCompoundButton.h" //for MTCompoundButton pod “UIView+TouchHighlighting”
+
+@interface MBCenteredButtonViewController ()
+
+@end
+
+@implementation MBCenteredButtonViewController
+
+#define _colorNavbarBarTintColor        [UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1.0]
+#define _colorTabbarBarTintColor        [UIColor colorWithRed:071.0/255.0 green:030.0/255.0 blue:050.0/255.0 alpha:1.0]
+
+@synthesize centerButton;
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self commonSetup];
+}
+
+- (void)commonSetup {
+    [self addCenterButtonWithTarget:self action:@selector(buttonPressed:)];
+    self.tabBar.barTintColor = _colorTabbarBarTintColor;
+    self.tabBar.tintColor = _colorNavbarBarTintColor;
+    if (@available(iOS 10.0, *)) {
+        [self.tabBar setUnselectedItemTintColor:_colorNavbarBarTintColor];
+    } else {
+        
+    }
+    self.tabBar.translucent = NO;
+    self.tabBarController.delegate = self;
+    self.selectedIndex = 2;
+}
+
+// Create a custom UIButton and add it to the center of our tab bar
+- (void)addCenterButtonWithTarget:(id)target action:(SEL)action
+{
+    float width = 64;
+    float height = self.tabBar.frame.size.height+12;//60;
+    float plushWidth = width-20;
+    float imgPlushWidth = plushWidth-20;
+    float imgPlushMargin = (plushWidth-imgPlushWidth)/2;
+    float yPositionForSafeAreaDifference = 0;
+    if(@available(iOS 11.0, *)) {
+        UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
+        if(window.safeAreaInsets.bottom>0) {
+            yPositionForSafeAreaDifference = window.safeAreaInsets.bottom;
+        }
+    }
+
+    MTCompoundButton* button = [[MTCompoundButton alloc] init];
+    button.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
+    button.frame = CGRectMake(0.0, 0.0, width, height);
+    button.backgroundColor = _colorTabbarBarTintColor;
+    button.touchHighlightingStyle = MTHighlightingStyleNone;
+    
+    MTCompoundButton* btnPlush = [[MTCompoundButton alloc] init];
+    btnPlush.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
+    btnPlush.frame = CGRectMake(0.0, -yPositionForSafeAreaDifference, plushWidth, plushWidth);
+    btnPlush.backgroundColor = [UIColor colorWithRed:33.0/255.0 green:197.0/255.0 blue:244.0/255.0 alpha:1.0];
+    btnPlush.center = button.center;
+    UIImageView *imgPlush = [[UIImageView alloc] initWithFrame:CGRectMake(imgPlushMargin, imgPlushMargin, imgPlushWidth, imgPlushWidth)];
+    [imgPlush setImage:[UIImage imageNamed:@"hood-selected"]];
+    [btnPlush addSubview:imgPlush];
+    [button addSubview:btnPlush];
+    btnPlush.layer.cornerRadius = plushWidth/2;
+    
+    
+    
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:button.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(button.bounds.size.width/2, button.bounds.size.width/2)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = button.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    button.layer.mask = maskLayer;
+    
+    CGFloat heightDifference = height - self.tabBar.frame.size.height;
+    if (heightDifference < 0) {
+        button.center = self.tabBar.center;
+    } else {
+        CGPoint center = self.tabBar.center;
+        center.y = center.y - (heightDifference/2.0) - yPositionForSafeAreaDifference;
+        button.center = center;
+    }
+    
+    [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:button];
+    self.centerButton = button;
+}
+
+- (void)buttonPressed:(id)sender
+{
+//    [self setSelectedIndex:2];
+//    [self performSelector:@selector(doHighlight:) withObject:sender afterDelay:0];
+}
+
+- (void)doHighlight:(UIButton*)b {
+    [b setHighlighted:YES];
+}
+
+- (void)doNotHighlight:(UIButton*)b {
+    [b setHighlighted:NO];
+}
+
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
+    return YES;
+}
+
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+{
+    if(self.tabBarController.selectedIndex != 2){
+        [self performSelector:@selector(doNotHighlight:) withObject:centerButton afterDelay:0];
+    }
+}
+
+- (BOOL)tabBarHidden {
+    return self.centerButton.hidden && self.tabBar.hidden;
+}
+
+- (void)setTabBarHidden:(BOOL)tabBarHidden
+{
+    self.centerButton.hidden = tabBarHidden;
+    self.tabBar.hidden = tabBarHidden;
+}
+
+@end
