@@ -1,0 +1,10 @@
+Set Leading, Trilling, Top, Bottom of view to SafeArea Programmatically
+
+if (@available(iOS 11, *)) {
+	self.view.translatesAutoresizingMaskIntoConstraints = NO;
+	UILayoutGuide * guide = self.view.safeAreaLayoutGuide;
+	[self.view.leadingAnchor constraintEqualToAnchor:guide.leadingAnchor].active = YES;
+	[self.view.trailingAnchor constraintEqualToAnchor:guide.trailingAnchor].active = YES;
+	[self.view.topAnchor constraintEqualToAnchor:guide.topAnchor].active = YES;
+	[self.view.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor].active = YES;
+}
