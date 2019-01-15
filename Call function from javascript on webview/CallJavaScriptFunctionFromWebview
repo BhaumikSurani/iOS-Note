@@ -1,0 +1,62 @@
+Import
+#import <JavaScriptCore/JavaScriptCore.h>
+
+Declare
+@property (nonatomic, readwrite, strong) JSContext *js;
+
+- (void)viewDidLoad{
+
+     NSString *address = @"http://yourpage.com";
+
+     // Build the url and loadRequest
+     NSString *urlString = [NSString stringWithFormat:@"%@",address];
+     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]];
+
+     //Get JSContext from webview
+     self.js = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+
+     //Set Delegate to JS object
+     self.js[@"DelegateName”] = self;
+
+     //Set Handlers to events on JS
+     self.js[@"DelegateName"][@"FuncWithParams"] = ^(NSString *param1) {
+         [self FuncWithParams:param1];
+     };
+
+     self.js[@"DelegateName"][@"FuncWithoutParams"] = ^{
+         [self FuncWithoutParams];
+     };
+
+}
+
+//Handlers (Note:- function name is "FuncWithParams" because "DelegateName.FuncWithParams" is inside html page. you must write function name after "DelegateName" after name of function is "FuncWithParams")
+- (void)FuncWithParams:(NSString *)param1 {
+     NSLog(@"Param =%@", param1);
+     //Do what you want
+}
+
+- (void)FuncWithoutParams {
+    NSLog(@"FuncWithoutParams");
+    //Do what you want
+}
+
+
+
+
+On You webpage
+<html>
+        <body>
+                <input type="button" value="Function With Parameter" onClick="FuncWithParams('Hello World!')"/>
+                <input type="button" value="Function Without Parameter" onClick="FuncWithoutParams()" />
+
+                <script type="text/javascript">
+                    function FuncWithParams(param1) {
+                        DelegateName.FuncWithParams(param1); 
+                    }
+
+                    function FuncWithoutParams() {
+                        DelegateName.FuncWithoutParams();
+                    }
+                </script>
+        </body>
+</html>
