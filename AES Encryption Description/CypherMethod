@@ -1,0 +1,44 @@
++ (NSData *)doCipher:(NSData *)dataIn
+                 key:(NSData *)symmetricKey
+             context:(CCOperation)encryptOrDecrypt // kCCEncrypt or kCCDecrypt
+{
+    CCCryptorStatus ccStatus   = kCCSuccess;
+    size_t          cryptBytes = 0;    // Number of bytes moved to buffer.
+    NSMutableData  *dataOut    = [NSMutableData dataWithLength:dataIn.length + kCCBlockSizeAES128];
+    
+    //note must set key size 16 or 32
+    /* working for 16 char key (AES128)
+    ccStatus = CCCrypt( encryptOrDecrypt,
+                       kCCAlgorithmAES,  //kCCAlgorithmAES128
+                       kCCOptionPKCS7Padding | kCCOptionECBMode,
+                       symmetricKey.bytes,
+                       kCCKeySizeAES128,
+                       nil,
+                       dataIn.bytes, dataIn.length,
+                       dataOut.mutableBytes, dataOut.length,
+                       &cryptBytes);*/
+    
+    //working for 32 char key (AES256)
+    ccStatus = CCCrypt( encryptOrDecrypt,
+                       kCCAlgorithmAES,
+                       kCCOptionPKCS7Padding | kCCOptionECBMode,
+                       symmetricKey.bytes,
+                       kCCKeySizeAES256,
+                       nil,
+                       dataIn.bytes, dataIn.length,
+                       dataOut.mutableBytes, dataOut.length,
+                       &cryptBytes);
+    
+    if (ccStatus != kCCSuccess) {
+        NSLog(@"CCCrypt status: %d", ccStatus);
+    }
+    
+    dataOut.length = cryptBytes;
+    
+    return dataOut;
+}
+
+//For Run
+NSData *data = [@“String For Encryption” dataUsingEncoding:NSUTF8StringEncoding];
+NSData *base64Data = [self doCipher:data key:[@“Key_For_Enc_desc” dataUsingEncoding:NSUTF8StringEncoding] context:kCCEncrypt];
+NSString *encryptedStr = [base64Data base64EncodedStringWithOptions:0];
