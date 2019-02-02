@@ -1,0 +1,82 @@
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    WKPreferences *webPref = [[WKPreferences alloc] init];
+    webPref.javaScriptEnabled = YES;
+    webPref.javaScriptCanOpenWindowsAutomatically = YES;
+    
+    WKWebViewConfiguration *theConfiguration = [[WKWebViewConfiguration alloc] init];
+    theConfiguration.preferences = webPref;
+    
+    // Setup WKUserContentController instance for injecting user script (handle event in iOS device)
+    WKUserContentController* userController = [[WKUserContentController alloc]init];
+    [userController addScriptMessageHandler:self name:@"iOS_JS_CallbackHandler"];
+    
+    theConfiguration.userContentController = userController;
+    
+    self.wkWebview = [[WKWebView alloc] initWithFrame:self.view.frame configuration:theConfiguration];
+    self.wkWebview.backgroundColor = _colorPrimary;
+    [self.view addSubview:self.wkWebview];
+    self.wkWebview.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.wkWebview.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active = YES;
+    [self.wkWebview.topAnchor constraintEqualToAnchor:self.view.topAnchor].active = YES;
+    [self.wkWebview.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
+    [self.wkWebview.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
+    
+    self.wkWebview.navigationDelegate = self;
+    self.wkWebview.UIDelegate = self;
+    [self.wkWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://192.168.1.1:8080/Html/Bhaumik/testCalling.html"]]];
+}
+
+#pragma mark - WKUIDelegate
+
+- (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures {
+    //For open new link in this wkwebview
+    if (!navigationAction.targetFrame.isMainFrame) {
+        [webView loadRequest:navigationAction.request];
+    }
+    return nil;
+}
+
+//For Javascript alerts display
+- (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Alert" message:message preferredStyle:UIAlertControllerStyleAlert];    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        completionHandler();
+    }]];
+    [self presentViewController:alertController animated:YES completion:^{}];
+}
+
+- (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL result))completionHandler {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Confirm" message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        completionHandler(YES);
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        completionHandler(NO);
+    }]];
+    [self presentViewController:alertController animated:YES completion:^{}];
+}
+
+#pragma mark - WKScriptMessageHandler
+
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+    PrintLog(@"%@", message.name); //print iOS_JS_CallbackHandler
+}
+
+
+
+File :- testCalling.html
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script type="text/javascript">
+	    function handleHtmlJSEventInIos() {
+	    	//setTimeout(function(){ 
+	    		//you can change iOS_JS_CallbackHandler 
+	            webkit.messageHandlers.iOS_JS_CallbackHandler.postMessage("data");
+	    	//}, 100);		        
+	    }
+	</script> 
+</head>
+<body onload="handleHtmlJSEventInIos()">
+</body>
+</html>
