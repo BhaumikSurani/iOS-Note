@@ -6,7 +6,3 @@
 }];
 
 
-//For Tableview
-[tableView performBatchUpdates:^{
-} completion:^(BOOL finished) {        
-}];
