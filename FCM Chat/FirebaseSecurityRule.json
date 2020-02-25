@@ -1,0 +1,19 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "message": {
+      "$messageId" :{
+        ".indexOn":"timestamp"
+      }
+    },
+    "friend": {
+        "$friendId":{
+          ".indexOn":["uid","timestamp"]
+        }
+    },
+    "user":{
+      ".indexOn":["uid"]
+    }
+  }
+}
