@@ -129,3 +129,26 @@ FIRDataEventTypeChildRemoved		/// A child node is removed from a location.
 FIRDataEventTypeChildChanged		/// A child node at a location changes.
 FIRDataEventTypeChildMoved		/// A child node moves relative to the other child nodes at a location.
 FIRDataEventTypeValue			/// Any data changes at a location or, recursively, at any child node.
+
+	  
+Firebase Security rule :- 	      
+{
+  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "message": {
+      "$messageId" :{
+        ".indexOn":"timestamp"
+      }
+    },
+    "friend": {
+        "$friendId":{
+          ".indexOn":["uid","timestamp"]
+        }
+    },
+    "user":{
+      ".indexOn":["uid"]
+    }
+  }
+}
