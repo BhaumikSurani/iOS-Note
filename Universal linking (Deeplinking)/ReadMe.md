@@ -60,3 +60,8 @@ Implement method in Appdelegate file
     }
 }
 ```
+
+If you want to check Deeplinking in simulator so run following command in terminal  
+```
+xcrun simctl openurl booted www.google.com
+```
