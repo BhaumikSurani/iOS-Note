@@ -1,0 +1,10 @@
+This line check on apple id  
+
+https://itunes.apple.com/lookup?id=361309726  
+
+This line check on Bundel Id or package  
+
+https://itunes.apple.com/lookup?bundleId=com.your.package  
+
+
+Paste this url in web browser and it return JSON text file with count and app detail
