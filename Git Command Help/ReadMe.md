@@ -41,3 +41,24 @@ git reset --hard HEAD
 git clean -f -d
 ```
 
+
+5) For comment specific branch
+
+```
+# on master branch
+git checkout master
+# Create a branch for feature 1
+git checkout -b feature_1
+# work on feature 1
+git add .
+git commit -m "Update and merge code"
+git push
+git push origin feature_1
+```
+
+
+6) Generate an SSH key pair
+
+```
+
+```
