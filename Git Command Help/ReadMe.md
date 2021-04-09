@@ -60,5 +60,22 @@ git push origin feature_1
 6) Generate an SSH key pair
 
 ```
-
+ssh-keygen -t ed25519 -C "<comment>"
 ```
+Generating public/private ed25519 key pair.  
+Enter file in which to save the key (/home/user/.ssh/id_ed25519): [Press Enter]  
+Enter passphrase (empty for no passphrase):  
+Enter same passphrase again: [Press Enter]  
+
+Check For "~/.ssh/config" file    
+AddKeysToAgent yes  
+UseKeychain yes  
+IdentityFile ~/.ssh/id_ed25519  
+
+Add SHA to git lab account
+```
+tr -d '\n' < ~/.ssh/id_ed25519.pub | pbcopy
+```
+
+Referance:- https://docs.gitlab.com/ee/ssh/README.html#see-if-you-have-an-existing-ssh-key-pair
+
