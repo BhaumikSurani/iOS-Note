@@ -2,6 +2,8 @@
 
 ```
 git clone http://gitlab/yourproject.git
+    or
+git clone https://gitlabusername@gitlab.com/gitlabusername/project.git
 ```
 now enter username and password
 
