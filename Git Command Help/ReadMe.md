@@ -56,6 +56,10 @@ git add .
 git commit -m "Update and merge code"
 git push
 git push origin feature_1
+
+
+#If branch already exist on cloude then use following cmd to create branch in local
+git branch branch_name
 ```
 
 
