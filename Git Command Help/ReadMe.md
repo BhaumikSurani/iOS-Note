@@ -58,8 +58,11 @@ git push
 git push origin feature_1
 
 
-#If branch already exist on cloude then use following cmd to create branch in local
+# If branch already exist on cloude then use following cmd to create branch in local
 git branch branch_name
+
+# Get all branch list of local
+git branch --all
 ```
 
 
