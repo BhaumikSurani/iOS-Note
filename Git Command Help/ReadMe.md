@@ -88,3 +88,28 @@ tr -d '\n' < ~/.ssh/id_ed25519.pub | pbcopy
 
 Referance:- https://docs.gitlab.com/ee/ssh/README.html#see-if-you-have-an-existing-ssh-key-pair
 
+
+
+7) Git stash command  
+When many person work on same project so all person work in different module  
+Someone add module and push code  
+You want to add that module on your local branch but your code is not commited so it conflict.  
+This command store changes on locally then apply new updated code and display conflict for merge.  
+
+When you have changes on your working copy, from command line do:
+```
+git stash 
+```
+This will stash your changes and clear your status report
+```
+git pull
+```
+This will pull changes from upstream branch. Make sure it says fast-forward in the report. If it doesn't, you are probably doing an unintended merge
+```
+git stash pop
+```
+This will apply stashed changes back to working copy and remove the changes from stash unless you have conflicts. In the case of conflict, they will stay in stash so you can start over if needed.  
+if you need to see what is in your stash
+```
+git stash list
+```
