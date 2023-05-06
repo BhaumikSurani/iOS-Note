@@ -113,3 +113,13 @@ if you need to see what is in your stash
 ```
 git stash list
 ```
+
+7) Migrate git project one server to other server with previous commit
+```
+git clone https://your.old.git.url
+git checkout your_branch_name
+git remote set-url origin https://you.new.git.url
+git add .
+git commit -m "Commit Text"
+git push origin your_branch_name
+```
