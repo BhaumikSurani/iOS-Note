@@ -90,7 +90,7 @@ Referance:- https://docs.gitlab.com/ee/ssh/README.html#see-if-you-have-an-existi
 
 
 
-7) Git stash command  
+8) Git stash command  
 When many person work on same project so all person work in different module  
 Someone add module and push code  
 You want to add that module on your local branch but your code is not commited so it conflict.  
